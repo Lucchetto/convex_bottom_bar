@@ -145,6 +145,9 @@ class ConvexAppBar extends StatefulWidget {
   /// The curve to use in the forward direction. Only works when tab style is not fixed.
   final Curve curve;
 
+  /// Min space for the bottom safe area
+  final double? minBottomInset;
+
   /// Construct a new appbar with internal style.
   ///
   /// ```dart
@@ -206,6 +209,7 @@ class ConvexAppBar extends StatefulWidget {
     TabStyle? style,
     Curve? curve,
     ChipBuilder? chipBuilder,
+    double? minBottomInset,
   }) : this.builder(
           key: key,
           itemBuilder: supportedStyle(
@@ -231,6 +235,7 @@ class ConvexAppBar extends StatefulWidget {
           cornerRadius: cornerRadius,
           curve: curve ?? Curves.easeInOut,
           chipBuilder: chipBuilder,
+          minBottomInset: minBottomInset,
         );
 
   /// Define a custom tab style by implement a [DelegateBuilder].
@@ -266,6 +271,7 @@ class ConvexAppBar extends StatefulWidget {
     this.cornerRadius,
     this.curve = Curves.easeInOut,
     this.chipBuilder,
+    this.minBottomInset,
   })  : assert(top == null || top <= 0, 'top should be negative'),
         assert(initialActiveIndex == null || initialActiveIndex < count,
             'initial index should < $count'),
@@ -317,6 +323,7 @@ class ConvexAppBar extends StatefulWidget {
     double? cornerRadius,
     TabStyle? style,
     Curve? curve,
+    double? minBottomInset,
   }) {
     DefaultChipBuilder? chipBuilder;
     if (badge.isNotEmpty) {
@@ -349,6 +356,7 @@ class ConvexAppBar extends StatefulWidget {
       style: style,
       curve: curve,
       chipBuilder: chipBuilder,
+      minBottomInset: minBottomInset,
     );
   }
 
@@ -526,7 +534,7 @@ class ConvexAppBarState extends State<ConvexAppBar>
   Widget build(BuildContext context) {
     // take care of iPhoneX' safe area at bottom edge
     final additionalBottomPadding =
-        math.max(MediaQuery.of(context).padding.bottom, 0.0);
+        math.max(MediaQuery.of(context).padding.bottom, widget.minBottomInset ?? 0);
     final convexIndex = isFixed() ? (widget.count ~/ 2) : _currentIndex;
     final active = isFixed() ? convexIndex == _currentIndex : true;
 
